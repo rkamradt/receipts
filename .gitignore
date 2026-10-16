@@ -1,0 +1,13 @@
+target/
+*.class
+.mvn/
+!.mvn/wrapper/
+.env
+.env.*
+
+receipts-frontend/node_modules/
+receipts-frontend/dist/
+
+*.iml
+.idea/
+.vscode/

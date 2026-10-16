@@ -1,0 +1,50 @@
+spring:
+  security:
+    oauth2:
+      client:
+        registration:
+          google:
+            client-id: ${GOOGLE_CLIENT_ID}
+            client-secret: ${GOOGLE_CLIENT_SECRET}
+            scope:
+              - openid
+              - email
+              - profile
+              - https://www.googleapis.com/auth/spreadsheets
+              - https://www.googleapis.com/auth/drive
+        provider:
+          google:
+            issuer-uri: https://accounts.google.com
+
+  servlet:
+    multipart:
+      max-file-size: 20MB
+      max-request-size: 21MB
+
+  web:
+    resources:
+      static-locations: classpath:/static/
+
+# Trust X-Forwarded-* headers from the Cloudflare tunnel so generated OAuth2
+# redirect URIs use https and the public host rather than http://localhost.
+server:
+  forward-headers-strategy: framework
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health
+
+receipts:
+  anthropic:
+    api-key: ${ANTHROPIC_API_KEY}
+    model: ${ANTHROPIC_MODEL:claude-sonnet-4-5}
+  google:
+    sheet-id: ${SHEET_ID}
+    sheet-tab: ${SHEET_TAB:Receipts}
+    drive-folder-id: ${DRIVE_FOLDER_ID}
+
+logging:
+  level:
+    com.rkamradt.receipts: INFO
