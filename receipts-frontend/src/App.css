@@ -299,6 +299,40 @@ html, body, #root {
 .btn-secondary:hover:not(:disabled) { border-color: var(--accent); }
 .btn-ghost:hover:not(:disabled)     { color: var(--text); }
 
+/* ── Mode toggle (Upload page) ─────────────────────────────────────────────── */
+.mode-toggle {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 20px;
+}
+
+.mode-toggle .btn { flex: 1; }
+
+/* ── Check cards (CheckReview page) ────────────────────────────────────────── */
+.check-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.check-card-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.check-card-title {
+  font-weight: 600;
+  font-size: 0.95rem;
+  color: var(--accent);
+}
+
+.check-note { margin: 0; }
+
 /* ── Mobile tweaks ─────────────────────────────────────────────────────────── */
 @media (max-width: 480px) {
   .action-row { flex-direction: column; }

@@ -3,6 +3,7 @@ import { getMe, SessionExpiredError } from './api.js'
 import SignIn from './pages/SignIn.jsx'
 import Upload from './pages/Upload.jsx'
 import Review from './pages/Review.jsx'
+import CheckReview from './pages/CheckReview.jsx'
 import Confirmation from './pages/Confirmation.jsx'
 
 export default function App() {
@@ -13,11 +14,11 @@ export default function App() {
   const [files, setFiles] = useState([])          // File[] selected by user
   const [currentIndex, setCurrentIndex] = useState(0)
   const [results, setResults] = useState([])       // confirmed rows
+  const [mode, setMode] = useState('receipts')     // 'receipts' | 'checks'
 
-  // page: 'signin' | 'upload' | 'review' | 'done'
+  // page: 'signin' | 'upload' | 'review' | 'check-review' | 'done'
   const [page, setPage] = useState('signin')
 
-  // Redirect to /oauth2/authorization/google — happens in the same tab
   const handleSessionExpired = () => {
     window.location.href = '/oauth2/authorization/google'
   }
@@ -36,11 +37,12 @@ export default function App() {
       .finally(() => setLoading(false))
   }, [])
 
-  function handleFilesSelected(selected) {
+  function handleFilesSelected(selected, selectedMode) {
     setFiles(selected)
     setCurrentIndex(0)
     setResults([])
-    setPage('review')
+    setMode(selectedMode)
+    setPage(selectedMode === 'checks' ? 'check-review' : 'review')
   }
 
   function handleConfirmed(result) {
@@ -93,8 +95,21 @@ export default function App() {
     )
   }
 
+  if (page === 'check-review') {
+    return (
+      <CheckReview
+        file={files[currentIndex]}
+        index={currentIndex}
+        total={files.length}
+        onConfirmed={handleConfirmed}
+        onSkipped={handleSkipped}
+        onSessionExpired={handleSessionExpired}
+      />
+    )
+  }
+
   if (page === 'done') {
-    return <Confirmation results={results} user={user} onDone={handleDone} />
+    return <Confirmation results={results} user={user} mode={mode} onDone={handleDone} />
   }
 
   return null

@@ -44,6 +44,8 @@ receipts:
     sheet-id: ${SHEET_ID}
     sheet-tab: ${SHEET_TAB:Receipts}
     drive-folder-id: ${DRIVE_FOLDER_ID}
+    check-sheet-id: ${CHECK_SHEET_ID}
+    check-sheet-tab: ${CHECK_SHEET_TAB:Checks}
 
 logging:
   level:

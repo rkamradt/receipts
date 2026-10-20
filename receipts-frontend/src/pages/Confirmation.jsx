@@ -1,8 +1,12 @@
-export default function Confirmation({ results, user, onDone }) {
+export default function Confirmation({ results, user, mode, onDone }) {
+  const isChecks = mode === 'checks'
+  const noun = isChecks ? 'check image' : 'receipt'
+  const nounPlural = isChecks ? 'check images' : 'receipts'
+
   return (
     <div className="page">
       <header className="top-bar">
-        <span className="app-name">🧾 Receipts</span>
+        <span className="app-name">{isChecks ? '💵' : '🧾'} Receipts</span>
         <span className="user-info">
           {user?.picture && <img src={user.picture} alt="" className="avatar" />}
           {user?.name}
@@ -16,19 +20,19 @@ export default function Confirmation({ results, user, onDone }) {
 
         {results.length > 0 ? (
           <>
-            <p>{results.length} receipt{results.length > 1 ? 's' : ''} added to the sheet.</p>
+            <p>{results.length} {results.length > 1 ? nounPlural : noun} added to the sheet.</p>
             <ul className="result-list">
               {results.map((r, i) => (
                 <li key={i}>
                   <a href={r.receiptUrl} target="_blank" rel="noopener noreferrer">
-                    View receipt {i + 1} in Drive
+                    View {noun} {i + 1} in Drive
                   </a>
                 </li>
               ))}
             </ul>
           </>
         ) : (
-          <p>No receipts were added (all were skipped).</p>
+          <p>No {nounPlural} were added (all were skipped).</p>
         )}
 
         <button className="btn btn-primary btn-large" onClick={onDone}>

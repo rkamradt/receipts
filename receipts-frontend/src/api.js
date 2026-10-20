@@ -67,6 +67,56 @@ export async function confirmReceipt(originalFile, data) {
   return res.json()
 }
 
+/**
+ * Send a check image for extraction. May return multiple checks.
+ * @param {File} file
+ * @returns {Promise<{checks: Array, confidenceNotes: string}>}
+ */
+export async function extractChecks(file) {
+  const form = new FormData()
+  form.append('file', file)
+
+  const res = await fetch('/api/check/extract', {
+    method: 'POST',
+    credentials: 'same-origin',
+    headers: { 'X-XSRF-TOKEN': getCsrf() },
+    body: form,
+  })
+
+  if (res.status === 401) throw new SessionExpiredError()
+  if (!res.ok) {
+    const err = await res.json().catch(() => ({}))
+    throw new Error(err.message || 'Extraction failed')
+  }
+  return res.json()
+}
+
+/**
+ * Upload the check image to Drive and append one row per check to the sheet.
+ * @param {File} originalFile
+ * @param {Array<{date,checkNumber,payee,amount,memo,confidenceNotes}>} checks  reviewed checks
+ * @returns {Promise<{receiptUrl: string}>}
+ */
+export async function confirmChecks(originalFile, checks) {
+  const form = new FormData()
+  form.append('file', originalFile)
+  form.append('data', JSON.stringify(checks))
+
+  const res = await fetch('/api/check/confirm', {
+    method: 'POST',
+    credentials: 'same-origin',
+    headers: { 'X-XSRF-TOKEN': getCsrf() },
+    body: form,
+  })
+
+  if (res.status === 401) throw new SessionExpiredError()
+  if (!res.ok) {
+    const err = await res.json().catch(() => ({}))
+    throw new Error(err.message || 'Could not save to sheet')
+  }
+  return res.json()
+}
+
 export class SessionExpiredError extends Error {
   constructor() { super('Session expired') }
 }
