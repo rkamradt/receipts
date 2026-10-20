@@ -75,9 +75,11 @@ public class SecurityConfig {
         OidcUserService delegate = new OidcUserService();
         return request -> {
             OidcUser user = delegate.loadUser(request);
-            String hd = user.getAttribute("hd");
             Boolean emailVerified = user.getAttribute("email_verified");
-            if (!"kamradtfamily.net".equals(hd) || !Boolean.TRUE.equals(emailVerified)) {
+            String email = user.getEmail();
+            if (!Boolean.TRUE.equals(emailVerified)
+                    || email == null
+                    || !email.endsWith("@kamradtfamily.net")) {
                 throw new OAuth2AuthenticationException("access_denied");
             }
             return user;
