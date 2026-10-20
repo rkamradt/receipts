@@ -29,6 +29,11 @@ spring:
 # redirect URIs use https and the public host rather than http://localhost.
 server:
   forward-headers-strategy: framework
+  servlet:
+    session:
+      cookie:
+        same-site: none
+        secure: true
 
 management:
   endpoints:

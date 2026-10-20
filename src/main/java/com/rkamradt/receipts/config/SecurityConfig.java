@@ -17,6 +17,9 @@ import org.springframework.security.web.csrf.CsrfTokenRequestAttributeHandler;
 @EnableWebSecurity
 public class SecurityConfig {
 
+    private static final org.slf4j.Logger log =
+        org.slf4j.LoggerFactory.getLogger(SecurityConfig.class);
+
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         // Spring Security 6: set attribute name to null so the token is resolved
@@ -41,7 +44,10 @@ public class SecurityConfig {
             .oauth2Login(oauth2 -> oauth2
                 .userInfoEndpoint(ui -> ui.oidcUserService(oidcUserService()))
                 .defaultSuccessUrl("/", true)
-                .failureUrl("/?error=auth_failed")
+                .failureHandler((req, res, ex) -> {
+                    log.error("OAuth2 login failed: {}", ex.getMessage(), ex);
+                    res.sendRedirect("/?error=auth_failed");
+                })
             )
             .logout(logout -> logout
                 .logoutSuccessUrl("/")
