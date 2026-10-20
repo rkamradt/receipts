@@ -10,30 +10,15 @@ SECRET_NAME=receipts-secret
 echo "Receipts Secret Creator"
 echo "========================"
 echo ""
-echo "Each value will be prompted. Press Enter to keep the current cluster value"
-echo "if the secret already exists (existing values are not shown for security)."
+echo "Each value will be prompted."
 echo ""
 
-prompt() {
-    local var_name=$1
-    local prompt_text=$2
-    local is_secret=${3:-false}
-
-    if [ "$is_secret" = "true" ]; then
-        read -rsp "$prompt_text: " value
-        echo ""
-    else
-        read -rp "$prompt_text: " value
-    fi
-    printf '%s' "$value"
-}
-
-GOOGLE_CLIENT_ID=$(prompt GOOGLE_CLIENT_ID     "Google OAuth2 Client ID")
-GOOGLE_CLIENT_SECRET=$(prompt GOOGLE_CLIENT_SECRET "Google OAuth2 Client Secret" true)
-ANTHROPIC_API_KEY=$(prompt ANTHROPIC_API_KEY   "Anthropic API Key" true)
-SHEET_ID=$(prompt SHEET_ID                     "Google Sheet ID (receipts spreadsheet)")
-CHECK_SHEET_ID=$(prompt CHECK_SHEET_ID         "Google Sheet ID (checks spreadsheet)")
-DRIVE_FOLDER_ID=$(prompt DRIVE_FOLDER_ID       "Google Drive Folder ID")
+read -rp "Google OAuth2 Client ID: " GOOGLE_CLIENT_ID
+read -rp "Google OAuth2 Client Secret: " GOOGLE_CLIENT_SECRET
+read -rp "Anthropic API Key: " ANTHROPIC_API_KEY
+read -rp "Google Sheet ID (receipts spreadsheet): " SHEET_ID
+read -rp "Google Sheet ID (checks spreadsheet): " CHECK_SHEET_ID
+read -rp "Google Drive Folder ID: " DRIVE_FOLDER_ID
 
 echo ""
 read -rp "Sheet tab name for receipts [Receipts]: " SHEET_TAB
